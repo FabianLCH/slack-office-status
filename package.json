@@ -1,0 +1,26 @@
+{
+  "name": "slack-lc-status",
+  "version": "1.0.0",
+  "description": "Slack Office Status slash commands app",
+  "main": "slash.js",
+  "scripts": {
+    "start": "node slash.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "office",
+    "slack",
+    "status"
+  ],
+  "author": "Fabian Lozano",
+  "license": "MIT",
+  "dependencies": {
+    "axios": "^0.16.1",
+    "body-parser": "^1.17.1",
+    "express": "^4.15.2",
+    "tsscmp": "^1.0.6",
+    "qs": "^6.9.0",
+    "mongoose": "^5.8.5",
+    "morgan": "^1.9.1"
+  }
+}
