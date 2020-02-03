@@ -3,7 +3,7 @@ const router = express.Router();
 const axios = require("axios");
 const mongoose = require("mongoose");
 
-const Members = require("./models/Members");
+const Members = require("../../models/Members");
 
 const { plainBlockFactory,
       mrkdwnBlockFactory } = require("./blockFactory");

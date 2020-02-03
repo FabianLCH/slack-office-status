@@ -1,15 +1,10 @@
 "use strict";
 
 const express = require("express");
-const bodyParser = require("body-parser");
 const axios = require("axios");
-const morgan = require("morgan");
 const mongoose = require("mongoose");
 
-const actionRouter = require("./actions");
-const optionsRouter = require("./options");
-
-const Members = require("./models/Members");
+const Members = require("../../models/Members");
 
 const { savedStatusBlock, 
        plainBlockFactory, 
@@ -20,11 +15,8 @@ const { savedStatusBlock,
        statusSetModal
       } = require("./blockFactory");
 
-const signature = require("./verifySignature");
 const commandList = require("./commandList");
 
-const PORT = process.env.PORT || 4000;
-const ATLAS_URI = process.env.ATLAS_URI;
 const { SLACK_WORKSPACE_TOKEN } = process.env;
 
 const SLACK_VIEW_OPEN_ENDPOINT = "https://slack.com/api/views.open";
@@ -33,22 +25,7 @@ const notInDatabaseMsg = "It looks like you are not in the database yet. To add 
 
 const { viewSubmissionActions } = require("./variables");
 
-const app = express();
-
-if (process.env.NODE_ENV !== "production") {
-  app.use(morgan("dev"));
-}
-
-mongoose.connect(ATLAS_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true
-});
-let db = mongoose.connection;
-
-db.once("open", () => {
-  console.log("Connected to database.");
-});
-db.on("error", console.error.bind(console, "MongoDB connection erorr:"));
+const slash = express.Router();
 
 const sendModal = (triggerId, modalFactoryFunction) => {
   
@@ -79,27 +56,8 @@ const sendModal = (triggerId, modalFactoryFunction) => {
   });
 }
 
-const rawBodyBuffer = (req, res, buf, encoding) => {
-  if (buf && buf.length) {
-    req.rawBody = buf.toString(encoding || "utf8");
-  }
-};
-
-// use raw buffer to perform request validation
-app.use(bodyParser.urlencoded({ verify: rawBodyBuffer, extended: true }));
-app.use(bodyParser.json({ verify: rawBodyBuffer }));
-
-// verify that request came from slack before performing any actions
-app.use(async (req, res, next) => {
-  if (!signature.isVerified(req)) {
-    return res.sendStatus(404);
-  } else {
-    next();
-  }
-});
-
 // detect command and generate corresponding blocks array
-app.post("/commands", async (req, res, next) => {
+slash.post("/", async (req, res, next) => {
     const userId = req.body["user_id"];
     let blocks = [];
   
@@ -452,7 +410,7 @@ app.post("/commands", async (req, res, next) => {
   
 
 // send standard responses to slack
-app.post("/commands", (req, res) => {
+slash.post("/", (req, res) => {
   const { blocks, responseType } = req;
 
   const message = {
@@ -464,13 +422,4 @@ app.post("/commands", (req, res) => {
   res.json(message);
 });
 
-app.use("/action", actionRouter);
-app.use("/options", optionsRouter);
-
-app.listen(PORT, () => {
-  console.log(
-    "Express server listening on port %d in %s mode",
-    PORT,
-    app.settings.env
-  );
-});
+module.exports = slash;

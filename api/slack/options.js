@@ -1,6 +1,6 @@
 const express = require("express");
 
-const Members = require("./models/Members");
+const Members = require("../../models/Members");
 
 const options = express.Router();
 
