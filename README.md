@@ -3,8 +3,16 @@ An Express server that listens for incoming `POST` requests from a Slack app and
 
 Users who install the app can use Slack commands from their workspace to update their office status on an online database.
 
+## Internal API
+___
+
 Slash Commands
 ---------
+
+**Endpoint:** /api/slack/commands
+
+### Command List
+
 `/lc_status help` - shows a list of all commands
 
 
@@ -35,10 +43,11 @@ Slash Commands
 `/lc_status clear` - clear the user's current status
 
 
-
 Actions
 ---------
-**Endpoint:** /action
+**Endpoint:** /api/slack/action
+
+The app uses two different action types for user interaction (action types are surrounded by square brackets below). Each action type may have one or more action instances.
 
 ### [block_action]
 
@@ -116,7 +125,7 @@ The view contains no input blocks. Its submission indicates user confirmation fo
 {
   _id: ObjectId,
   slackId: String,
-  identifier: String
+  identifier: String,
   currentStatus: {_id: ObjectId, message: String, publicId: String},
   lastUpdated: Date,
   statusList: [
@@ -124,3 +133,41 @@ The view contains no input blocks. Its submission indicates user confirmation fo
   ]
 }
 ```
+
+Options
+----
+
+**Endpoint:** /api/slack/options
+
+Returns an array of status messages that match the user's search query. This endpoint is used by the `/lc_status saved remove` view.
+
+A user can search for a status message by its respective:
+* Public ID
+* Message content
+
+## Public API
+___
+
+**Endpoint:** /api/public/:identifier
+
+`idenfitier` - a registered user's identifier (a unique string specified when enrolling to the database).
+
+### Response
+For an existing `identifier`:
+```json
+{ 
+  "publicId": "string",
+  "message": "string"
+}
+```
+
+For an `identifier` that is not found in the database:
+```json
+{
+  "error": true,
+  "errorMsg": "string"
+}
+```
+
+
+

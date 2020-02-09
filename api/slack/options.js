@@ -10,8 +10,6 @@ options.post("/", (req, res) => {
   
   const searchParam = payload.value;
   
-  console.log(searchParam);
-  
   const searchRegExp = new RegExp(searchParam, "i");
   
   Members.findOne({slackId: userId}, (err, memberDocument) => {
