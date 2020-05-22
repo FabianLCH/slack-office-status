@@ -16,7 +16,25 @@ publicRouter.get("/:identifier", (req, res) => {
         else {
             if(doc && Object.entries(doc).length > 0) {
                 const { publicId, message } = doc.currentStatus;
-                return res.json({ publicId, message });
+                const lastUpdatedRaw = doc.lastUpdated;
+                
+                const parsedLastUpdated = Date.parse(lastUpdatedRaw);
+                const now = Date.now();
+                
+                const minuteDifference = Math.floor((now - parsedLastUpdated)/(1000 * 60));
+                const hourDifference = Math.floor((now - parsedLastUpdated)/(1000 * 60 * 60));
+                const dayDifference = Math.floor((now - parsedLastUpdated)/(1000 * 60 * 60 * 24));
+
+                return res.json({ 
+                    publicId, 
+                    message, 
+                    lastUpdated: {
+                        raw: lastUpdatedRaw,
+                        minutes: minuteDifference,
+                        hours: hourDifference,
+                        days: dayDifference
+                    }
+                });
             }
             else {
                 return res.json({error: true, errorMsg: "User not found."});

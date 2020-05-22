@@ -228,7 +228,14 @@ router.post("/", (req, res, next) => {
               
       if(values[saveOption.blockId][saveOption.actionId]["selected_option"]["value"] == saveOption.values.yes) {
         // set status and save it
-        Members.updateOne({ slackId: userId }, {currentStatus: newStatusMessage, $push: { statusList: newStatusMessage }}, (err, memberDocument) => {
+        Members.updateOne(
+          { slackId: userId }, 
+          {
+            currentStatus: newStatusMessage, 
+            lastUpdated: new Date().toISOString(), 
+            $push: { statusList: newStatusMessage }
+          }, 
+          (err, memberDocument) => {
           if(err) {
               console.log(err);
               return postMessageModal(triggerId, "Could not set status", "Unable to set status on database. Please try again later.");
@@ -240,7 +247,13 @@ router.post("/", (req, res, next) => {
       }
       else {
         // just set status
-        Members.updateOne({ slackId: userId }, {currentStatus: newStatusMessage }, (err, memberDocument) => {
+        Members.updateOne(
+          { slackId: userId }, 
+          {
+            currentStatus: newStatusMessage,
+            lastUpdated: new Date().toISOString()
+          }, 
+          (err, memberDocument) => {
           if(err) {
             console.log(err);
             return postMessageModal(triggerId, "Could not set status", "Unable to set status on database. Please try again.");

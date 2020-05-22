@@ -330,8 +330,12 @@ slash.post("/", async (req, res, next) => {
                     else {
                       // update current status on DB
                       const newCurrentStatus = memberDocument.statusList[targetStatusIdx];
+                      const now = new Date();
 
-                      Members.updateOne({ slackId: userId }, {currentStatus: newCurrentStatus }, (err, memberDocument) => {
+                      Members.updateOne(
+                        { slackId: userId }, 
+                        { currentStatus: newCurrentStatus, lastUpdated: now.toISOString() }, 
+                        (err, memberDocument) => {
                         if(err)
                           blocks.push(plainBlockFactory("Could not update current status. Please try again later."));
                         else {
