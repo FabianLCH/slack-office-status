@@ -33,7 +33,8 @@ publicRouter.get("/:identifier", (req, res) => {
                         minutes: minuteDifference,
                         hours: hourDifference,
                         days: dayDifference
-                    }
+                    },
+                    location: doc.location
                 });
             }
             else {

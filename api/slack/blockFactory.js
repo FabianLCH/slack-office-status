@@ -145,7 +145,7 @@ const modalFactory = (title, callbackId, submitText, closeText, blocks) => {
 
 // -----------------------------------
 // SAVED ADD, SAVED REMOVE,  SET modal variables
-const { addToSaved, removeFromSaved, setAndSave } = viewSubmissionActions;
+const { addToSaved, removeFromSaved, setAndSave, editLocation } = viewSubmissionActions;
 const { publicId, messageContent } = addToSaved.inputs;
 
 const pubIdInput = inputBlockFactory(PLAIN_TEXT_INPUT, publicId.label, publicId.blockId, publicId.actionId);
@@ -224,6 +224,34 @@ const statusSetModal = () => {
   );
 }
 
+const editLocationModal = (currentLocation) => {
+  const { locationText } = editLocation.inputs;
+
+  const editLocationInputBlock = inputBlockFactory(
+    PLAIN_TEXT_INPUT,
+    locationText.label,
+    locationText.blockId,
+    locationText.actionId
+  )
+
+  if(currentLocation) {
+    editLocationInputBlock["element"]["initial_value"] = currentLocation
+  }
+
+  const editLocationContextBlock = contextBlockFactory("This can be a line of text or a URL.")
+
+  return modalFactory(
+    editLocation.title,
+    editLocation.callbackId,
+    editLocation.submit,
+    editLocation.close,
+    [
+      editLocationInputBlock,
+      editLocationContextBlock
+    ]
+  )
+}
+
 const savedStatusBlock = (message, id) => {
   return {
     type: "section",
@@ -243,4 +271,4 @@ const savedStatusBlock = (message, id) => {
   };
 };
 
-module.exports = { savedStatusBlock, plainBlockFactory, mrkdwnBlockFactory, contextBlockFactory, modalFactory, savedAddModal, savedRemoveModal, statusSetModal };
+module.exports = { savedStatusBlock, plainBlockFactory, mrkdwnBlockFactory, contextBlockFactory, modalFactory, savedAddModal, savedRemoveModal, statusSetModal, editLocationModal };

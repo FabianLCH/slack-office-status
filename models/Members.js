@@ -9,6 +9,7 @@ const Members = new Schema({
   identifier: String,
   currentStatus: {_id: ObjectId, message: String, publicId: String},
   lastUpdated: Date,
+  location: String,
   statusList: [
     {_id: ObjectId, message: String, publicId: String}
   ]

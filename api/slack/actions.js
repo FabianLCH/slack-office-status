@@ -144,7 +144,7 @@ router.post("/", (req, res, next) => {
   else if(payload.type == "view_submission") {
     const triggerId = payload["trigger_id"];
     
-    const { addToSaved, removeFromSaved, setAndSave, confirmUnenroll } = viewSubmissionActions;
+    const { addToSaved, removeFromSaved, setAndSave, confirmUnenroll, editLocation } = viewSubmissionActions;
     
     let callbackId;
     
@@ -280,6 +280,28 @@ router.post("/", (req, res, next) => {
           return postMessageModal(triggerId, "Unenroll successful", "You have been removed from the database successfully.");
         }
       });
+    }
+    // &&&&&&&&&&&&&&&&&&&&&&&&
+    //  LOCATION MODAL SUBMITTED
+    // &&&&&&&&&&&&&&&&&&&&&&&&
+    else if(callbackId == editLocation.callbackId) {
+      const { values } = payload.view.state;
+
+      const { locationText } = editLocation.inputs;
+
+      Members.updateOne(
+        { slackId: userId },
+        { location: values[locationText.blockId][locationText.actionId]["value"] },
+        (err, memberDocument) => {
+          if(err) {
+            console.log(err);
+            return postMessageModal(triggerId, "Could not update", "Unable to update location on database. Please try again later.");
+          }
+          else {
+            postMessageModal(triggerId, "Location updated", "Your location was updated successfully.");
+          }
+        }
+        )
     }
     // &&&&&&&&&&&&&&&&&&&&&&&&&
     //  INVALID MODAL SUBMITTED

@@ -117,6 +117,19 @@ The field can contain one of two values:
 
 The view contains no input blocks. Its submission indicates user confirmation for unenrollment.
 
+#### 5. _editLocation_
+
+**Slash command:** `/lc_status location`
+
+**callback_id:** `edit_location`
+
+The view contains a single input block:
+
+|**Edit Location**|
+|-----------------|
+|**block_id:** statLocEdit |
+|**action_id:** statLocEdit_save |
+
 ## Schemas
 
 ### Members
@@ -128,6 +141,7 @@ The view contains no input blocks. Its submission indicates user confirmation fo
   identifier: String,
   currentStatus: {_id: ObjectId, message: String, publicId: String},
   lastUpdated: Date,
+  location: String,
   statusList: [
     {_id: ObjectId, message: String, publicId: String}
   ]
@@ -157,7 +171,14 @@ For an existing `identifier`:
 ```json
 { 
   "publicId": "string",
-  "message": "string"
+  "message": "string",
+  "lastUpdated": {
+    "raw": "date",
+    "minutes": "number",
+    "hours": "number",
+    "days": "number"
+  },
+  "location": "string"
 }
 ```
 

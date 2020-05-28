@@ -12,7 +12,8 @@ const { savedStatusBlock,
        modalFactory,
        savedAddModal,
        savedRemoveModal,
-       statusSetModal
+       statusSetModal,
+       editLocationModal
       } = require("./blockFactory");
 
 const commandList = require("./commandList");
@@ -188,6 +189,7 @@ slash.post("/", async (req, res, next) => {
                   identifier: value,
                   currentStatus: {},
                   lastUpdated: null,
+                  location: "",
                   statusList: []
                 });
               
@@ -392,6 +394,18 @@ slash.post("/", async (req, res, next) => {
                                                    confirmUnenroll.submit,
                                                    confirmUnenroll.close,
                                                    [mrkdwnBlockFactory("Are you sure you want to unenroll? *All of your saved status messages will be deleted.*")]));
+          }
+          // ++++++++ LOCATION ++++++++ //
+          else if(subcommand == "location") {
+            const triggerId = req.body["trigger_id"];
+
+            // acknowledge the request
+            res.send();
+
+            const editLocationModalWrapper = () => editLocationModal(memberDocument.location);
+
+            // send the remove modal
+            sendModal(triggerId, editLocationModalWrapper);
           }
           // ???? UNKNOWN COMMAND ????
           else {

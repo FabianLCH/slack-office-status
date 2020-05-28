@@ -40,6 +40,19 @@ const viewSubmissionActions = {
     callbackId: "confirm_unenroll",
     submit: "Confirm",
     close: "Cancel"
+  },
+  editLocation: {
+    title: "Edit Location",
+    callbackId: "edit_location",
+    submit: "Save", 
+    close: "Cancel",
+    inputs: {
+      locationText: {
+        label: "Please enter your current location",
+        blockId: "statLocEdit",
+        actionId: "statLocEdit_save"
+      }
+    }
   }
 };
 
